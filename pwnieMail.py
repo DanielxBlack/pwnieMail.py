@@ -84,7 +84,7 @@ with open(textFile) as eMail_list:
                         # inform user of pwnage found by the numbers
                         timesPwnd = len(query)
                         if timesPwnd < 1:
-                            print("Dang. You're lucky. No pwnage found for {addresses}!")
+                            print(f"Dang. You're lucky. No pwnage found for {addresses}!")
                         elif timesPwnd > 10:
                             print(f"Holy crap! Your email ({addresses}) has been pwnd {timesPwnd} times. Hope you're not on Ashley Madison!")
                         else:
