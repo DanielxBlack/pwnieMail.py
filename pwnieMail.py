@@ -49,66 +49,66 @@ print("")
 
 # Import required Modules
 from haveibeenpwnd import check_email
-from haveibeenpwnd import check_password
 from prettytable import PrettyTable
 
-passwd = input("Gimmie a password! ")
-tester = check_password(passwd)
-print (tester)
 
 # Ask for email address and assign a variable
 # Strip spaces and make lowercase.
-eMailAddy = input("Enter an email address: ")
-eMailAddy = eMailAddy.strip()
-eMailAddy = eMailAddy.lower()
-
-# Throw a Variable on the dicionary and strip "breaches"
-tempOut = check_email(eMailAddy)
-query = tempOut["breaches"]
+# eMailAddy = input("Enter an email address: ")
+# eMailAddy = eMailAddy.strip()
+# eMailAddy = eMailAddy.lower()
 
 
+# Import an email list
+textFile = input("Please select a list of email addresses to import: ")
 
 
-# List times pwned
-print ("")
-timesPwnd = len(query)
-if timesPwnd < 1:
-    print ("Dang. You're lucky. No pwnage found!")
-elif timesPwnd > 10:
-    print ("Holy crap! Your email has been pwnd " + str(timesPwnd) + " times. Hope you're not on Ashley Madison!")
-else:
-    print ("Pwn records found: " + str(timesPwnd) + ".")
+with open(textFile) as eMail_list:
+        for line in eMail_list:
+            for eMailAddress in line.split():
+                emails = [str(eMailAddress)]
 
-x = PrettyTable()
+                # def show_status and create a for loop
+                # strip spaces and make all lowercase
+                def view_status(words):
+                    for eMailAddress in emails:
+                        addresses = (eMailAddress.lower()); addresses = (addresses.strip())
+                        #print(addresses)
+                        tempOut = check_email(addresses)
+                        query = tempOut["breaches"]
+                        print("")
+                        timesPwnd = len(query)
+                        if timesPwnd < 1:
+                            print("Dang. You're lucky. No pwnage found for {addresses}!")
+                        elif timesPwnd > 10:
+                            print(f"Holy crap! Your email ({addresses}) has been pwnd {timesPwnd} times. Hope you're not on Ashley Madison!")
+                        else:
+                            print(f"Pwn records found for {addresses}: {timesPwnd}.")
+
+                        x = PrettyTable()
+
+                        breach_list = {}
+
+                        i = 0
+
+                        # Print names for each breach
+                        for item in query:
+
+                            x.field_names = ["Email", "Name", "Domain", "BreachDate", "AddedDate", "Pwn Count", "Type of data released", "Is a Spam List"]
+                            Name = item["Name"]
+                            Domain = item["Domain"]
+                            BreachDate = item["BreachDate"]
+                            AddedDate = item["AddedDate"]
+                            PwnCount = "{:,}".format(item["PwnCount"])
+                            DataClasses = str(item["DataClasses"])
+                            IsSpamList = str(item["IsSpamList"])
 
 
-breach_list = {}
-i = 0
-
-# Print names for each breach
-for item in query:
-
-    x.field_names = ["Email", "Name", "Domain", "BreachDate", "AddedDate", "Pwn Count", "Type of data released", "Is a Spam List"]
-    Name = item["Name"]
-    Domain = item["Domain"]
-    BreachDate = item["BreachDate"]
-    AddedDate = item["AddedDate"]
-    PwnCount = "{:,}".format(item["PwnCount"])
-    DataClasses = str(item["DataClasses"])
-    IsSpamList = str(item["IsSpamList"])
-
-
-    x.add_row([eMailAddy, Name, Domain, BreachDate, AddedDate, PwnCount, DataClasses, IsSpamList])
+                            x.add_row([addresses, Name, Domain, BreachDate, AddedDate, PwnCount, DataClasses, IsSpamList])
 
 
 
-print (x)
+                        print (x)
 
 
-
-
-
-
-# Spacers
-print ("")
-print ("")
+                view_status(emails)
