@@ -48,28 +48,40 @@ print("")
 
 
 # Import required Modules
+# They can be found at:
+# https://github.com/berend/haveibeenpwnd
+# http://zetcode.com/python/prettytable/
 from haveibeenpwnd import check_email
 from prettytable import PrettyTable
 
 
-# Import an email list
+
+# Import an email list from a txt file.
 textFile = input("Please select a list of email addresses to import: ")
 
 
+# Import the textFile and split it up
+# into individual lines.
 with open(textFile) as eMail_list:
         for line in eMail_list:
             for eMailAddress in line.split():
                 emails = [str(eMailAddress)]
 
-                # def show_status and create a for loop
-                # strip spaces and make all lowercase
+                # Create a function that will test each email on the list
+                # against the haveibeenpwnd database
+                # strip extra spaces and make all lowercase
                 def view_status(words):
                     for eMailAddress in emails:
                         addresses = (eMailAddress.lower()); addresses = (addresses.strip())
-                        #print(addresses)
+
+                        # this will create a variable in the python dictionary list
+                        # and strip "breaches"
                         tempOut = check_email(addresses)
                         query = tempOut["breaches"]
                         print("")
+
+
+                        # inform user of pwnage found by the numbers
                         timesPwnd = len(query)
                         if timesPwnd < 1:
                             print("Dang. You're lucky. No pwnage found for {addresses}!")
@@ -78,6 +90,7 @@ with open(textFile) as eMail_list:
                         else:
                             print(f"Pwn records found for {addresses}: {timesPwnd}.")
 
+                        # assign a variable to our table
                         x = PrettyTable()
 
                         breach_list = {}
