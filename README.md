@@ -7,3 +7,9 @@ It requires the following two libraries to work correctly:
 
 # About the project
 It's really nothing special, to be honest. I'm learning Python and building simple tools is part of that journey.
+
+
+# How it works
+pwnieMail is designed for python 3.
+Run it with: 
+> python3 pwnieMail.py
