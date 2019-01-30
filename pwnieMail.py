@@ -52,13 +52,6 @@ from haveibeenpwnd import check_email
 from prettytable import PrettyTable
 
 
-# Ask for email address and assign a variable
-# Strip spaces and make lowercase.
-# eMailAddy = input("Enter an email address: ")
-# eMailAddy = eMailAddy.strip()
-# eMailAddy = eMailAddy.lower()
-
-
 # Import an email list
 textFile = input("Please select a list of email addresses to import: ")
 
