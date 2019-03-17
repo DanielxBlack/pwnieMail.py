@@ -2,6 +2,8 @@
 
 # import os and clear screen
 import os
+import time
+
 os.system("clear")
 
 print("")
@@ -48,67 +50,76 @@ print("")
 
 
 # Import required Modules
+# They can be found at:
+# https://github.com/berend/haveibeenpwnd
+# http://zetcode.com/python/prettytable/
 from haveibeenpwnd import check_email
-from haveibeenpwnd import check_password
 from prettytable import PrettyTable
 
-passwd = input("Gimmie a password! ")
-tester = check_password(passwd)
-print (tester)
-
-# Ask for email address and assign a variable
-# Strip spaces and make lowercase.
-eMailAddy = input("Enter an email address: ")
-eMailAddy = eMailAddy.strip()
-eMailAddy = eMailAddy.lower()
-
-# Throw a Variable on the dicionary and strip "breaches"
-tempOut = check_email(eMailAddy)
-query = tempOut["breaches"]
 
 
+# Import an email list from a txt file.
+textFile = input("Please select a list of email addresses to import: ")
 
 
-# List times pwned
-print ("")
-timesPwnd = len(query)
-if timesPwnd < 1:
-    print ("Dang. You're lucky. No pwnage found!")
-elif timesPwnd > 10:
-    print ("Holy crap! Your email has been pwnd " + str(timesPwnd) + " times. Hope you're not on Ashley Madison!")
-else:
-    print ("Pwn records found: " + str(timesPwnd) + ".")
-
-x = PrettyTable()
+# Import the textFile and split it up
+# into individual lines.
+with open(textFile) as eMail_list:
+        for line in eMail_list:
+            for eMailAddress in line.split():
+                emails = [str(eMailAddress)]
 
 
-breach_list = {}
-i = 0
+                # Create a function that will test each email on the list
+                # against the haveibeenpwnd database
+                # strip extra spaces and make all lowercase
+                def view_status(words):
+                    for eMailAddress in emails:
+                        addresses = (eMailAddress.lower()); addresses = (addresses.strip())
 
-# Print names for each breach
-for item in query:
-
-    x.field_names = ["Email", "Name", "Domain", "BreachDate", "AddedDate", "Pwn Count", "Type of data released", "Is a Spam List"]
-    Name = item["Name"]
-    Domain = item["Domain"]
-    BreachDate = item["BreachDate"]
-    AddedDate = item["AddedDate"]
-    PwnCount = "{:,}".format(item["PwnCount"])
-    DataClasses = str(item["DataClasses"])
-    IsSpamList = str(item["IsSpamList"])
-
-
-    x.add_row([eMailAddy, Name, Domain, BreachDate, AddedDate, PwnCount, DataClasses, IsSpamList])
+                        # this will create a variable in the python dictionary list
+                        # and strip "breaches"
+                        tempOut = check_email(addresses)
+                        query = tempOut["breaches"]
+                        # Rate limit 2 seconds per query
+                        time.sleep(2)
+                        print("")
 
 
+                        # inform user of pwnage found by the numbers
+                        timesPwnd = len(query)
+                        if timesPwnd < 1:
+                            print(f"Dang. You're lucky. No pwnage found for {addresses}!")
+                        elif timesPwnd > 10:
+                            print(f"Holy crap! Your email ({addresses}) has been pwnd {timesPwnd} times. Hope you're not on Ashley Madison!")
+                        else:
+                            print(f"Pwn records found for {addresses}: {timesPwnd}.")
 
-print (x)
+                        # assign a variable to our table
+                        x = PrettyTable()
+
+                        breach_list = {}
+
+                        i = 0
+
+                        # Print names for each breach
+                        for item in query:
+
+                            x.field_names = ["Email", "Name", "Domain", "BreachDate", "AddedDate", "Pwn Count", "Type of data released", "Is a Spam List"]
+                            Name = item["Name"]
+                            Domain = item["Domain"]
+                            BreachDate = item["BreachDate"]
+                            AddedDate = item["AddedDate"]
+                            PwnCount = "{:,}".format(item["PwnCount"])
+                            DataClasses = str(item["DataClasses"])
+                            IsSpamList = str(item["IsSpamList"])
+
+
+                            x.add_row([addresses, Name, Domain, BreachDate, AddedDate, PwnCount, DataClasses, IsSpamList])
 
 
 
+                        print (x)
 
 
-
-# Spacers
-print ("")
-print ("")
+                view_status(emails)
