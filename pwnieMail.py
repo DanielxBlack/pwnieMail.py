@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# import os and clear screen
+# import time, os and clear screen
 import os
 import time
 
