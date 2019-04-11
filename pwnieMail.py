@@ -80,9 +80,9 @@ with open(textFile) as eMail_list:
                         # this will create a variable in the python dictionary list
                         # and strip "breaches"
                         tempOut = check_email(addresses)
-                        query = tempOut["breaches"]
                         # Rate limit 2 seconds per query
                         time.sleep(2)
+                        query = tempOut["breaches"] 
                         print("")
 
 
